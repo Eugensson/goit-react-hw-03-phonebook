@@ -13,6 +13,21 @@ class App extends React.Component {
     filter: '',
   };
 
+  componentDidMount() {
+    const contactsLS = localStorage.getItem('contacts');
+    const parsedContacts = JSON.parse(contactsLS);
+
+    if (parsedContacts) {
+      this.setState({ contacts: parsedContacts });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
+
   changeFilter = e => {
     this.setState({ filter: e.currentTarget.value });
   };
