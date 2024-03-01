@@ -1,49 +1,31 @@
-import React from 'react';
 import PropTypes from 'prop-types';
-import ContactListItem from 'components/ContactListItem/ContactListItem';
-import {
-  ContactListContainer,
-  ContactsList,
-  ContactNotification,
-} from 'components/ContactList/ContactList.styled';
 
-class ContactList extends React.Component {
-  render() {
-    const { contacts, getFilteredContacts, onContactDelete } = this.props;
+import { Contact, Notification } from 'components';
 
-    const filteredContacts = getFilteredContacts();
+import { Wrapper, List, Item } from './ContactList.styled';
 
-    return (
-      <ContactListContainer>
-        {contacts.length !== 0 ? (
-          <ContactsList>
-            {filteredContacts.map(({ id, name, number }) => (
-              <ContactListItem
-                key={id}
-                name={name}
-                number={number}
-                onContactDelete={() => onContactDelete(id)}
-              />
-            ))}
-          </ContactsList>
-        ) : (
-          <ContactNotification>
-            You don't have any contacts in your phonebook
-          </ContactNotification>
-        )}
-      </ContactListContainer>
-    );
-  }
+const ContactList = ({ onDeleteContact, getFilteredContacts }) => {
+  const filteredContacts = getFilteredContacts();
+  return (
+    <Wrapper>
+      {filteredContacts.length !== 0
+        ? <List>
+            {filteredContacts.map(({id, name, number}) => (
+              <Item key={id}>
+                <Contact
+                  name={name}
+                  number={number}
+                  onDeleteContact={()=>onDeleteContact(id)}
+                />
+              </Item>              
+          ))}
+          </List>
+        : <Notification message="No search results found"/>}
+    </Wrapper>   
+  )
 }
 
-ContactList.propTypes = {
-  contacts: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-    })
-  ).isRequired,
+ContactList.propTypes = {  
   getFilteredContacts: PropTypes.func.isRequired,
   onDeleteContact: PropTypes.func,
 };
